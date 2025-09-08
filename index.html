@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+        }
+
+        .dark-bg {
+            background-color: #1c1c1c;
+        }
+
+        .light-gray-btn {
+            background-color: #a5a5a5;
+            color: #000;
+        }
+
+        .dark-gray-btn {
+            background-color: #333333;
+            color: #fff;
+        }
+
+        .orange-btn {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .calc-display {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 3rem;
+            min-height: 80px;
+            padding: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .calc-display {
+                font-size: 5rem;
+                min-height: 100px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .calc-display {
+                font-size: 6rem;
+                min-height: 120px;
+            }
+        }
+
+        .btn-circle {
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: auto;
+            width: auto;
+            height: auto;
+            padding: 10px 0;
+        }
+
+        @media (min-width: 768px) {
+            .btn-circle {
+                width: auto;
+                height: auto;
+                padding: 15px 0;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .btn-circle {
+                width: auto;
+                height: auto;
+                padding: 20px 0;
+            }
+        }
+
+        .btn-zero {
+            border-radius: 12px;
+            text-align: center;
+            padding-left: 0;
+            justify-content: center;
+        }
+
+        .converter-btn {
+            background-color: #333333;
+            color: #fff;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <!-- Calculator container -->
+    <div
+        class="rounded-3xl p-6 w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl space-y-6 dark-bg shadow-2xl mx-auto">
+
+
+        <!-- Logo and Title -->
+        <div class="flex items-center justify-center space-x-2 text-2xl font-bold text-white mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-400" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+                <line x1="12" y1="14" x2="12" y2="18"></line>
+                <line x1="12" y1="18" x2="12" y2="22"></line>
+            </svg>
+            <span>Calculator</span>
+        </div>
+
+        <!-- Main View Switcher -->
+        <div class="flex justify-center space-x-2 p-2 rounded-full bg-[#1c1c1c] mb-4">
+            <button id="calc-view-btn"
+                class="px-4 py-2 rounded-full font-medium transition-colors duration-200 bg-blue-600 text-white shadow-md">
+                Calculator
+            </button>
+            <button id="converters-view-btn"
+                class="px-4 py-2 rounded-full font-medium transition-colors duration-200 bg-transparent text-gray-300">
+                Converters
+            </button>
+        </div>
+
+        <!-- Calculator View -->
+        <div id="calculator-view">
+            <!-- Display -->
+            <div id="display"
+                class="text-white text-right overflow-x-auto calc-display tracking-wide p-6 text-6xl md:text-7xl border border-gray-600 rounded-lg mb-6 min-h-[120px]">
+                0
+            </div>
+
+            <!-- Scientific Functions Expand/Collapse Button -->
+            <button id="toggle-scientific-btn"
+                class="w-full flex items-center justify-center py-2 text-sm font-semibold text-gray-400 rounded-lg transition-colors duration-200 hover:bg-gray-700 focus:outline-none mb-4">
+                <span class="mr-2">Scientific</span>
+                <svg id="arrow-down" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+                <svg id="arrow-up" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+
+            <!-- Scientific Functions (visible when expanded) -->
+            <div id="scientific-panel"
+                class="grid grid-cols-5 gap-3 mt-4 transition-all duration-300 ease-in-out hidden">
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="sin(">sin</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="cos(">cos</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="tan(">tan</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="sqrt(">√</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="**2">x²</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="log(">log</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="ln(">ln</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="pi">π</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="e">e</button>
+                <button class="calc-btn-scientific light-gray-btn rounded-lg py-2" data-value="**">^</button>
+            </div>
+
+            <!-- Basic Calculator Grid -->
+            <div id="main-calculator-grid" class="grid grid-cols-4 gap-3 mt-6 text-lg md:text-xl lg:text-2xl">
+                <button class="light-gray-btn btn-circle" data-value="AC">AC</button>
+                <button class="light-gray-btn btn-circle" data-value="+/-">+/-</button>
+                <button class="light-gray-btn btn-circle" data-value="%">%</button>
+                <button class="orange-btn btn-circle" data-value="/">÷</button>
+
+                <button class="dark-gray-btn btn-circle" data-value="7">7</button>
+                <button class="dark-gray-btn btn-circle" data-value="8">8</button>
+                <button class="dark-gray-btn btn-circle" data-value="9">9</button>
+                <button class="orange-btn btn-circle" data-value="*">×</button>
+
+                <button class="dark-gray-btn btn-circle" data-value="4">4</button>
+                <button class="dark-gray-btn btn-circle" data-value="5">5</button>
+                <button class="dark-gray-btn btn-circle" data-value="6">6</button>
+                <button class="orange-btn btn-circle" data-value="-">-</button>
+
+                <button class="dark-gray-btn btn-circle" data-value="1">1</button>
+                <button class="dark-gray-btn btn-circle" data-value="2">2</button>
+                <button class="dark-gray-btn btn-circle" data-value="3">3</button>
+                <button class="orange-btn btn-circle" data-value="+">+</button>
+
+                <button class="dark-gray-btn col-span-2 btn-zero" data-value="0">0</button>
+                <button class="dark-gray-btn btn-circle" data-value=".">.</button>
+                <button class="orange-btn btn-circle" data-value="=">=</button>
+            </div>
+        </div>
+
+        <!-- Converters View -->
+        <div id="converters-view" class="hidden">
+            <!-- Clear instructions for the user -->
+            <h2 class="text-xl font-bold text-center text-white mb-4">Unit Converters</h2>
+            <p class="text-gray-400 text-center mb-6">Select a converter below to get started.</p>
+
+            <div id="converter-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <button class="converter-btn p-6 rounded-xl font-semibold text-xl" data-converter="mass">Mass</button>
+                <button class="converter-btn p-6 rounded-xl font-semibold text-xl" data-converter="area">Area</button>
+                <button class="converter-btn p-6 rounded-xl font-semibold text-xl" data-converter="data">Data</button>
+                <button class="converter-btn p-6 rounded-xl font-semibold text-xl" data-converter="time">Time</button>
+                <button class="converter-btn p-6 rounded-xl font-semibold text-xl"
+                    data-converter="length">Length</button>
+                <button class="converter-btn p-6 rounded-xl font-semibold text-xl"
+                    data-converter="temperature">Temperature</button>
+            </div>
+
+            <!-- Converter Inputs & Output -->
+            <div id="converter-panel" class="mt-6 p-4 rounded-xl space-y-4 dark-bg hidden">
+                <h3 id="converter-title" class="text-xl font-semibold text-white capitalize"></h3>
+                <div class="space-y-2">
+                    <label id="from-unit-label" class="block text-gray-400"></label>
+                    <input type="number" id="converter-input" placeholder="e.g., 100"
+                        class="w-full p-3 rounded-lg border-2 border-transparent bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label id="to-unit-label" class="block text-gray-400"></label>
+                    <input type="number" id="converter-output" placeholder="Converted value"
+                        class="w-full p-3 rounded-lg border-2 border-transparent bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button id="swap-btn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg">Swap Units</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // State Variables
+            let currentView = 'calculator';
+            let expression = '';
+            let isScientificExpanded = false;
+            let currentConverter = '';
+            let fromUnit = '';
+            let toUnit = '';
+            let factor = 1;
+
+            // DOM Elements
+            const calculatorView = document.getElementById('calculator-view');
+            const convertersView = document.getElementById('converters-view');
+            const display = document.getElementById('display');
+            const toggleScientificBtn = document.getElementById('toggle-scientific-btn');
+            const scientificPanel = document.getElementById('scientific-panel');
+            const mainCalculatorGrid = document.getElementById('main-calculator-grid');
+            const converterGrid = document.getElementById('converter-grid');
+            const converterPanel = document.getElementById('converter-panel');
+            const converterTitle = document.getElementById('converter-title');
+            const converterInput = document.getElementById('converter-input');
+            const converterOutput = document.getElementById('converter-output');
+            const fromUnitLabel = document.getElementById('from-unit-label');
+            const toUnitLabel = document.getElementById('to-unit-label');
+            const calcViewBtn = document.getElementById('calc-view-btn');
+            const convertersViewBtn = document.getElementById('converters-view-btn');
+
+            // Icon elements
+            const arrowUp = document.getElementById('arrow-up');
+            const arrowDown = document.getElementById('arrow-down');
+
+            // Converters data
+            const converters = {
+                mass: { units: ['kg', 'lbs'], factor: 2.20462 },
+                area: { units: ['sq meters', 'sq ft'], factor: 10.7639 },
+                data: { units: ['Gigabytes', 'Megabytes'], factor: 1024 },
+                time: { units: ['hours', 'minutes'], factor: 60 },
+                length: { units: ['meters', 'feet'], factor: 3.28084 },
+                temperature: { units: ['Celsius', 'Fahrenheit'], factor: 9 / 5, offset: 32 }
+            };
+
+            // --- Calculator Logic ---
+            const handleButtonClick = (value) => {
+                if (value === 'AC') {
+                    display.innerText = '0';
+                    expression = '';
+                    return;
+                }
+                if (value === '+/-') {
+                    if (expression !== '' && expression !== '0') {
+                        if (expression.startsWith('-')) {
+                            expression = expression.substring(1);
+                        } else {
+                            expression = '-' + expression;
+                        }
+                        display.innerText = expression.replace(/\*\*/g, '^').replace(/\*/g, '×').replace(/\//g, '÷');
+                    }
+                    return;
+                }
+                if (value === '%') {
+                    try {
+                        let result = evaluateExpression(expression);
+                        result = result / 100;
+                        display.innerText = result.toString();
+                        expression = result.toString();
+                    } catch (e) {
+                        display.innerText = 'Error';
+                        expression = '';
+                    }
+                    return;
+                }
+                if (value === '=') {
+                    try {
+                        const result = evaluateExpression(expression);
+                        display.innerText = result.toString();
+                        expression = result.toString();
+                    } catch (e) {
+                        display.innerText = 'Error';
+                        expression = '';
+                    }
+                    return;
+                }
+
+                // Clear initial '0' if a number is pressed
+                if (display.innerText === '0' && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(value)) {
+                    expression = '';
+                }
+
+                expression += value;
+                display.innerText = expression.replace(/\*\*/g, '^').replace(/\*/g, '×').replace(/\//g, '÷');
+            };
+
+            const evaluateExpression = (expr) => {
+                let sanitizedExpr = expr.replace(/×/g, '*').replace(/÷/g, '/');
+                sanitizedExpr = sanitizedExpr.replace(/sin\(/g, 'Math.sin(');
+                sanitizedExpr = sanitizedExpr.replace(/cos\(/g, 'Math.cos(');
+                sanitizedExpr = sanitizedExpr.replace(/tan\(/g, 'Math.tan(');
+                sanitizedExpr = sanitizedExpr.replace(/sqrt\(/g, 'Math.sqrt(');
+                sanitizedExpr = sanitizedExpr.replace(/log\(/g, 'Math.log10(');
+                sanitizedExpr = sanitizedExpr.replace(/ln\(/g, 'Math.log(');
+                sanitizedExpr = sanitizedExpr.replace(/pi/g, 'Math.PI');
+                sanitizedExpr = sanitizedExpr.replace(/e/g, 'Math.E');
+
+                try {
+                    const result = new Function('return ' + sanitizedExpr)();
+                    if (typeof result === 'number' && !isNaN(result)) {
+                        return result;
+                    } else {
+                        throw new Error('Invalid expression');
+                    }
+                } catch (e) {
+                    throw new Error('Invalid expression');
+                }
+            };
+
+            const toggleScientific = () => {
+                isScientificExpanded = !isScientificExpanded;
+                scientificPanel.classList.toggle('hidden', !isScientificExpanded);
+                arrowUp.classList.toggle('hidden', !isScientificExpanded);
+                arrowDown.classList.toggle('hidden', isScientificExpanded);
+            };
+
+            // --- Converter Logic ---
+            const switchConverter = (type) => {
+                currentConverter = type;
+                const conv = converters[type];
+                fromUnit = conv.units[0];
+                toUnit = conv.units[1];
+                factor = conv.factor;
+                converterPanel.classList.remove('hidden');
+                converterTitle.innerText = `${type} Converter`;
+                converterInput.value = '';
+                converterOutput.value = '';
+                fromUnitLabel.innerText = `Enter Value in ${fromUnit}:`;
+                toUnitLabel.innerText = `Converted Value in ${toUnit}:`;
+            };
+
+            const convertFrom = () => {
+                const input = parseFloat(converterInput.value);
+                if (isNaN(input)) {
+                    converterOutput.value = '';
+                    return;
+                }
+                let result;
+                if (currentConverter === 'temperature') {
+                    if (fromUnit === 'Celsius') {
+                        result = input * factor + 32;
+                    } else {
+                        result = (input - 32) * (5 / 9);
+                    }
+                } else {
+                    result = input * factor;
+                }
+                converterOutput.value = result.toFixed(2);
+            };
+
+            const convertTo = () => {
+                const input = parseFloat(converterOutput.value);
+                if (isNaN(input)) {
+                    converterInput.value = '';
+                    return;
+                }
+                let result;
+                if (currentConverter === 'temperature') {
+                    if (toUnit === 'Celsius') {
+                        result = (input - 32) * (5 / 9);
+                    } else {
+                        result = input * factor + 32;
+                    }
+                } else {
+                    result = input / factor;
+                }
+                converterInput.value = result.toFixed(2);
+            };
+
+            const swapUnits = () => {
+                [fromUnit, toUnit] = [toUnit, fromUnit];
+                fromUnitLabel.innerText = `Enter Value in ${fromUnit}:`;
+                toUnitLabel.innerText = `Converted Value in ${toUnit}:`;
+                // Swap the values
+                const temp = converterInput.value;
+                converterInput.value = converterOutput.value;
+                converterOutput.value = temp;
+            };
+
+
+
+            // --- View Switcher Logic ---
+            const switchView = (view) => {
+                currentView = view;
+                if (currentView === 'calculator') {
+                    calculatorView.classList.remove('hidden');
+                    convertersView.classList.add('hidden');
+                    calcViewBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                    convertersViewBtn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    convertersViewBtn.classList.add('bg-transparent', 'text-gray-300');
+                    // Reset calculator state
+                    display.innerText = '0';
+                    expression = '';
+                } else {
+                    calculatorView.classList.add('hidden');
+                    convertersView.classList.remove('hidden');
+                    convertersViewBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                    calcViewBtn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    calcViewBtn.classList.add('bg-transparent', 'text-gray-300');
+                    // Reset converter state
+                    currentConverter = '';
+                    converterPanel.classList.add('hidden');
+                    converterInput.value = '';
+                }
+            };
+
+            // --- Event Listeners ---
+            toggleScientificBtn.addEventListener('click', () => {
+                isScientificExpanded = !isScientificExpanded;
+                scientificPanel.classList.toggle('hidden', !isScientificExpanded);
+                const arrowUp = document.getElementById('arrow-up');
+                const arrowDown = document.getElementById('arrow-down');
+                arrowUp.classList.toggle('hidden', !isScientificExpanded);
+                arrowDown.classList.toggle('hidden', isScientificExpanded);
+            });
+
+            // Fixed the event listener by using the parent element and checking the target
+            document.addEventListener('click', (event) => {
+                let value = null;
+                if (mainCalculatorGrid.contains(event.target)) {
+                    value = event.target.dataset.value;
+                } else if (scientificPanel.contains(event.target)) {
+                    value = event.target.dataset.value;
+                }
+
+                if (value) {
+                    handleButtonClick(value);
+                }
+            });
+
+            converterGrid.addEventListener('click', (event) => {
+                const type = event.target.dataset.converter;
+                if (type) {
+                    switchConverter(type);
+                }
+            });
+
+            converterInput.addEventListener('input', convertFrom);
+            converterOutput.addEventListener('input', convertTo);
+
+            document.getElementById('swap-btn').addEventListener('click', swapUnits);
+
+            calcViewBtn.addEventListener('click', () => switchView('calculator'));
+            convertersViewBtn.addEventListener('click', () => switchView('converters'));
+        });
+    </script>
+</body>
+
+</html>
