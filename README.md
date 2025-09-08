@@ -4,7 +4,10 @@
 
 <h2>Demo</h2>
 [<a href="https://chetu002coder.github.io/Advanced-calculator-/">click here to use </a>]
+
 ---
+
+
 ##features
 
 *smooth user interface <br>
