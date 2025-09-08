@@ -3,8 +3,8 @@
 ---
 
 <h2>Demo</h2>
-[click here to use  <a href="https://chetu002coder.github.io/Advanced-calculator-/"></a>]
-
+[<a href="https://chetu002coder.github.io/Advanced-calculator-/">click here to use </a>]
+---
 ##features
 
 *smooth user interface <br>
