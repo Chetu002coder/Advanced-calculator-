@@ -4,8 +4,8 @@
 
 ##features
 
-*smooth user interface
-*converters like mass, time, length , etc..
+*smooth user interface <br>
+*converters like mass, time, length , etc..<br>
 *user friendly
 
 
